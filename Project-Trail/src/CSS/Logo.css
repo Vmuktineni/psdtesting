@@ -1,0 +1,11 @@
+/* Logo.css */
+.logo {
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo img {
+    max-width: 100px; /* Adjust the maximum width as needed */
+    height: auto; /* Maintain the aspect ratio */
+  }
+  
