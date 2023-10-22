@@ -1,0 +1,16 @@
+/* AboutUs.css */
+.about-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  @media (max-width: 768px) {
+    .about-container {
+      max-width: 100%; /* Adjust as needed for responsiveness */
+      margin: 0;
+      padding: 10px; /* Add padding for better mobile display */
+    }
+  }

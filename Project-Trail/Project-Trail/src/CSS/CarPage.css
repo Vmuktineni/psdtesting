@@ -1,0 +1,55 @@
+.carpage-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 150px;
+  }
+  
+  .search-container {
+    margin-bottom: 20px;
+  }
+  
+  .car-logos-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .car-logos-container .row {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  
+  .car-logos-container .row .car-logo {
+    margin: 10px;
+  }
+  
+  .car-models-container {
+    margin-top: 20px;
+  }
+  
+  .car-models-container input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+  }
+  
+  .car-models-container input[type="text"] {
+    margin-top: 10px;
+  }
+  
+  .car-models-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .car-models-container li {
+    font-size: 18px;
+    margin-top: 15px;
+  }
