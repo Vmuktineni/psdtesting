@@ -1,4 +1,7 @@
+
 /* Navigation.css */
+
+
 .navigation ul {
     list-style: none;
     padding: 0;
@@ -7,12 +10,20 @@
   
   .navigation ul li {
     display: inline;
+
     margin-right: 300px; /* Adjust the margin as needed */
+
+    margin-right: 300px;
+
   }
   
   .navigation ul li a {
     text-decoration: none;
+
     color: #fd4d08; /* Adjust the color as needed */
+
+    color: #fd4d08; 
+
     font-weight: bold;
   }
   

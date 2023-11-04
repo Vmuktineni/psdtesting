@@ -1,22 +1,29 @@
-/* ContactInfo.css */
-.contact-info {
-    display: flex;
-    align-items: center;
-  }
-  
-  .contact-icon {
-    text-decoration: none;
-    color: #333; /* Adjust the color as needed */
-    margin-right: 10px; /* Adjust the margin as needed */
-  }
-  
-  @media (max-width: 768px) {
-    .contact-info {
-      flex-direction: column; /* Stack items vertically on mobile */
-      align-items: center;
-    }
-    
-    .contact-icon {
-      margin: 5px 0; /* Adjust spacing between icons */
-    }
-  }
+.contact-container {
+  background-color: rgb(255, 123, 0); 
+  color: white;
+  padding: 20px;
+  width: 800px;
+  height: 200px;
+  text-align: center;
+}
+
+.contact-text {
+  margin-bottom: 20px;
+  font-size:large;
+}
+
+.contact-text p {
+  margin: 5px 0;
+}
+
+.contact-text a {
+  color: rgb(0, 0, 0);
+  font-size: large;
+  text-decoration: none;
+}
+
+.social-links a {
+  margin: 0 10px;
+  font-size: large;
+  text-decoration: none;
+}

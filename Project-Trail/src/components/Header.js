@@ -1,26 +1,40 @@
-import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link
-import Logo from './Logo'; // Import the Logo component
+
+import { Link } from 'react-router-dom';
+import Logo from './Logo';
 import '../CSS/Header.css';
-import NavDropDown from "./NavDropDown";
 import { useSelector } from 'react-redux';
+import { FaShoppingCart } from 'react-icons/fa'; // Import the cart icon
+import NavDropDown from './NavDropDown';
 
 function Header() {
   const userFromRedux = useSelector(state => state?.userInfo?.user);
-  console.log(userFromRedux);
+
   return (
     <header className="header">
       <div className="dashboard">
-        <Logo /> {/* Add the Logo component */}
-        <NavDropDown user = {userFromRedux} />
+        <Logo />
+        {userFromRedux && <NavDropDown />}
       </div>
       <nav className="navigation">
         <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/about">About</Link></li>
-          <li><Link to="/contact">Contact</Link></li>
+        {userFromRedux ? null : ( 
+            <>
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/about">About</Link></li>
+              <li><Link to="/contact">Contact</Link></li>
+            </>
+          )}
         </ul>
       </nav>
+      {userFromRedux && (
+        <div className="cart-icon">
+          <Link to="/cart">
+            {}
+            <FaShoppingCart size={30} color="white" />
+          </Link>
+        </div>
+      )}
+
     </header>
   );
 }

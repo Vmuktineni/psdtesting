@@ -15,7 +15,7 @@ const Profile = () => {
       </button>
       {isProfileOpen && (
         <div className="profile-content">
-          {/* Add your profile settings and password change form here */}
+          {}
         </div>
       )}
     </div>

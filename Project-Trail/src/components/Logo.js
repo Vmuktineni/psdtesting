@@ -1,6 +1,5 @@
-// Logo.js
 import React from 'react';
-import logoImage from '../Logos/mechazonelogo.png'; // Replace with the actual path to your logo image
+import logoImage from '../Logos/mechazonelogo.png'; 
 import '../CSS/Logo.css';
 
 function Logo() {

@@ -1,8 +1,7 @@
-* Profile.css */
 .profile {
   position: fixed;
   top: 0;
-  right: -200px; /* Start off-screen to the right */
+  right: -200px;
   width: 200px;
   height: 100%;
   background-color: #fff;
@@ -11,7 +10,7 @@
 }
 
 .profile-open {
-  transform: translateX(-200px); /* Move in from the right when open */
+  transform: translateX(-200px); 
 }
 
 .profile-button {
@@ -28,7 +27,5 @@
 
 .profile-content {
   padding: 20px;
-  /* Add styling for profile settings and password change form here */
 }
 
-/* Add more styles as needed */

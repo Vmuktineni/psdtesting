@@ -1,0 +1,49 @@
+.car-part-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 0px; 
+  }
+  
+  .car-part-box {
+    position: relative;
+    width: calc(33.33% - 30px); 
+    margin: 20px 15px; 
+    background-color: #ffffff;
+    color: #000;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+  }
+  
+  .part-box img {
+    max-width: 80%;
+    max-height: 80%;
+    border-radius: 10px;
+  }
+  
+  .rating {
+    font-size: 18px;
+    margin-top: 5px;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: space-around; 
+  }
+  
+  .button-container button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #ff8113;
+    color: #000;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 16px;
+  }
+  
+  .button-container button:hover {
+    background-color: #ccc;
+  }
+  

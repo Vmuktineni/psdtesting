@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import '../CSS/Dashboard.css';
-import { FaBars, FaHome } from 'react-icons/fa';
+import { FaBars, FaHome, FaUser } from 'react-icons/fa';
 import { AiOutlineClose } from 'react-icons/ai';
-import { IoMdHelpCircle ,IoMdLogOut,IoMdSettings } from 'react-icons/io';
+import { IoMdHelpCircle ,IoMdLogOut, IoMdSettings} from 'react-icons/io';
 import { Link } from 'react-router-dom';
 
 const SidebarData = [
   {
     title: 'Home',
-    path: '/',
+    path: '/dashboard',
     icon: <FaHome />,
     cName: 'nav-text',
   },
@@ -19,16 +19,25 @@ const SidebarData = [
     icon: <IoMdHelpCircle />,
     cName: 'nav-text',
   },
+
   {
-    title: 'Settings', // New Settings link
-    path: '/settings', // Add the path for your settings page
-    icon: <IoMdSettings />, // Use the appropriate icon
+    title: 'Profile', 
+    path: '/profile', 
+    icon: <FaUser />, 
     cName: 'nav-text',
   },
+
   {
-    title: 'Logout', // New Settings link
-    path: '/logout', // Add the path for your settings page
-    icon: <IoMdLogOut />, // Use the appropriate icon
+    title: 'Settings',
+    path: '/settings',
+    icon: <IoMdSettings />,
+    cName: 'nav-text',
+  },
+  
+  {
+    title: 'Logout',
+    path: '/logout', 
+    icon: <IoMdLogOut />, 
     cName: 'nav-text',
   },
 ];
@@ -70,3 +79,6 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
+
+
