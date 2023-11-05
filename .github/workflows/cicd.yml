@@ -7,8 +7,6 @@ version: 2.1
 jobs:
   # Run Reactjs application
   start-reactjs:
-    docker:
-      - image: node:latest
     steps:
       - checkout
       - run:
@@ -17,8 +15,6 @@ jobs:
 
   # Run Python API
   run-python-api:
-    docker:
-      - image: python:latest
     steps:
       - checkout
       - run:
@@ -27,8 +23,6 @@ jobs:
 
   # Run Pytest cases
   run-pytest:
-    docker:
-      - image: python:latest
     steps:
       - checkout
       - run:
