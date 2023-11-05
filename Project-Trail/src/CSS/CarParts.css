@@ -5,12 +5,23 @@
     margin: 0 0px; 
   }
   
-  .car-part-box {
+  /* .car-part-box {
     position: relative;
     width: calc(33.33% - 30px); 
     margin: 20px 15px; 
     background-color: #ffffff;
     color: #000;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+  } */
+  .car-part-box {
+    position: relative;
+    width: calc(33.33% - 30px);
+    margin: 20px 15px;
+    background-color: #ffffff;
+    color: black; /* Change text color to black */
     text-align: center;
     border-radius: 10px;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
