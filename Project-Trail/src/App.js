@@ -20,6 +20,7 @@ import CarParts from './components/CarParts';
 import BikeParts from './components/Bikepart';
 import CarSpares from './components/CarSpares';
 import BikeSpares from './components/BikeSpares';
+import NewCarPage from './components/NewCarPage';
 
 
 
@@ -40,8 +41,8 @@ function App() {
           <Route path ="/bikes" element={<Bikes/>}/>
           <Route path ="/logout" element={<Logout/>}/>
           <Route path ="/settings" element={<Settings/>}/>
-          <Route path ="/bike-search" element={<BikePage/>}/>
-          <Route path ="/car-search" element={<Carpage/>}/> 
+          <Route path ="/bike-search" element={<NewCarPage/>}/>
+          <Route path ="/car-search" element={<NewCarPage/>}/> 
           <Route path="/carparts/:brand/:model" element={<CarParts />} />
           <Route path="/bikeparts/:brand/:model" element={<BikeParts />} />
           <Route path ="/car-spares/:carId" element={<CarSpares/>}/>

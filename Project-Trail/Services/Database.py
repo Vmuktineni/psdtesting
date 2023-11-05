@@ -8,7 +8,7 @@ import base64
 
 #engine = create_engine('mssql+pyodbc://@' + DESKTOP-8FANH7R + '/' + BWorks + '?trusted_connection=yes&driver=ODBC+Driver+13+for+SQL+Server  driver=SQL Server Native Client 11.0')')
 
-engine = create_engine('mssql+pyodbc://@' + 'VINEETHA\MSSQL' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=ODBC Driver 17 for SQL Server')
+engine = create_engine('mssql+pyodbc://@' + 'DESKTOP-8FANH7R' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=ODBC Driver 17 for SQL Server')
 
 #engine = create_engine('mssql+pyodbc://@' + 'DESKTOP-8FANH7R' + '/' + 'BWorks' + '?trusted_connection=yes&driver=SQL Server', use_setinputsizes=False)
 
@@ -87,7 +87,6 @@ class Users(Base):
     Password: str = Column(String, nullable = False)
 
 def register_db(req):
-     
 
     from sqlalchemy import insert
     stmt = insert(Users).values(Name=req['Name'], ContactId=req['ContactId'],Email=req['Email'],Address=req['Address'],ZipCode=req['ZipCode'],UserName=req['UserName'],Password=req['Password'])
@@ -127,7 +126,6 @@ def login_db(req):
         
 def getAllCarsFrom_db():
     try:
-        
         from sqlalchemy import text
         with Session(engine) as session:
             sql_statement = text("SELECT * FROM cars" )
