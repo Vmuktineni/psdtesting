@@ -135,6 +135,7 @@ const NewCarPage = () => {
   const getBrands = () => {
     const _searchBrand = {
       brand
+      
     };
     axios.post(`${API_URL}/getBrands`, _searchBrand)
       .then((res) => {
