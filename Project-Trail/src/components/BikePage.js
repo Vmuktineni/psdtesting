@@ -16,15 +16,15 @@ function BikePage() {
   const bikeBrands = [
     {
       name: 'Honda',
-      models: ['CBR1000RR', 'CRF250L', 'Gold Wing', 'Rebel 500', 'CB300R'],
+      models: [' CBR1000RR', 'CRF250L', 'Gold Wing', 'Rebel 500', 'CB300R'],
     },
     {
       name: 'Yamaha',
-      models: ['YZF-R1', 'MT-07', 'Super Tenere', 'YZ450F', 'VMAX'],
+      models: [' YZF-R1', 'MT-07', 'Super Tenere', 'YZ450F', 'VMAX'],
     },
     {
       name: 'Kawasaki',
-      models: ['Ninja 400', 'Z900', 'Versys', 'KLX250', 'Concours'],
+      models: [' Ninja 400', 'Z900', 'Versys', 'KLX250', 'Concours','cornoardo'],
     },
     {
       name: 'Suzuki',

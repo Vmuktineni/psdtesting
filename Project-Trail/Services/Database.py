@@ -252,6 +252,7 @@ def getAllBikesFrom_db():
                 
             })
            
+            
             return bikesList
     except Exception as e:
         print(e)
