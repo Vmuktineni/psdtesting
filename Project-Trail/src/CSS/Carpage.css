@@ -92,3 +92,7 @@ error-popup {
 .model-suggestions .model-suggestion:hover {
   background-color: #f5f5f5;
 }
+
+.highlighted-brand {
+  background-color: yellow; /* Change the highlighting style as needed */
+}
