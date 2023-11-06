@@ -200,7 +200,7 @@ const NewCarPage = () => {
               {models.length > 0 && (
                 <div className="model-suggestions">
                   {models.map((eachModel) => (
-                    <Link to={`/carparts/${selectedBrand}/${eachModel}`} key={eachModel}>
+                    <Link to={`/CarSpares/${selectedBrand}/${eachModel}`} key={eachModel}>
                       <div className="model-suggestion">
                         {eachModel}
                       </div>
@@ -212,16 +212,16 @@ const NewCarPage = () => {
           </div>
         )}
 
-          {brands.length > 0 &&
-          brands.map((eachBrand) => (
+          {models.length > 0 &&
+          models.map((eachModel) => (
             <p
               onClick={() => {
-                setBrand(eachBrand);
-                setSelectedBrand(eachBrand);
+                setBrand(eachModel);
+                setSelectedBrand(eachModel);
               }}
-              className={eachBrand === selectedBrand ? "highlighted-brand" : ""}
+              className={eachModel === selectedBrand ? "highlighted-brand" : ""}
             >
-              {eachBrand}
+              {eachModel}
             </p>
           ))}
 

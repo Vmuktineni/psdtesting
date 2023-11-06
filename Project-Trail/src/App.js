@@ -48,6 +48,7 @@ function App() {
           <Route path ="/car-spares/:carId" element={<CarSpares/>}/>
           <Route path ="/bike-spares/:bikeId" element={<BikeSpares/>}/>
 
+
         </Routes>
         <Footer /> 
       </div>
