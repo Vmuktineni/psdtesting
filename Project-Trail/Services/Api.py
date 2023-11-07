@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request,jsonify,render_template
 from traitlets import This
-from Database import getAllBikesFrom_db,getAllSparesForBikes,getAllCarsFrom_db,getAllSparesForCars, getBrands, getModelsByBrand,register_db,login_db
+from Database import getAllBikesFrom_db,getAllSparesForBikes,getAllCarsFrom_db,getAllSparesForCars, getBrands, getModelsByBrand,register_db,login_db,getBrandModelCarParts
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -62,6 +62,11 @@ def bikes():
     res = getAllBikesFrom_db()
     return jsonify(res)
 
+@app.route('/getBrandModelCarParts',methods = ['post'])
+def brandmodelcarparts():
+    req = request.get_json()
+    res = getBrandModelCarParts(req)
+    return jsonify(res)
 
 if __name__ == '__main__':
     app.run()

@@ -173,6 +173,28 @@ def getAllSparesForCars(req):
         print(e)
         return [{}]    
     
+def getBrandModelCarParts(req):
+    try:
+        from sqlalchemy import text
+        with Session(engine) as session:
+            sql_statement = text("SELECT * FROM Car_Spares where car_id  in  (select car_id  from cars WHERE brand = :brand AND model = :model)" )
+            query = session.query(Car_Spares).from_statement(sql_statement)
+            query = query.params(brand=req['brand'], model=req['model'])
+            sparesResult = query.all()
+            spares = []
+            for spare in sparesResult:
+                spares.append({
+                    "s_id": spare.s_id,
+                    "name": spare.name,
+                    "price": spare.price,
+                    "warranty": spare.warranty
+                })
+
+            return spares
+    except Exception as e:
+        print(e)
+        return [{}]
+    
 def getAllSparesForBikes(req):
     try:
         from sqlalchemy import text
