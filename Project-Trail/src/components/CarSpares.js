@@ -17,7 +17,7 @@ const CarSpares = () => {
       };
 
       // Make an API request to fetch car spares data
-      axios.post(API_URL + "/getCarSpares", _data)
+      axios.post(API_URL + "/getBrandModelCarParts", _data)
         .then((res) => {
           if (res && res.data && res.data.length > 0) {
             setSpares(res.data);

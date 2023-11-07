@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../Constants";
 import { Link } from "react-router-dom";
-import '../CSS/Carpage.css'; // Ensure that the correct path to your CSS file is used.
-
+import '../CSS/Carpage.css';
 
 const NewCarPage = () => {
   const [brand, setBrand] = useState('');
@@ -11,6 +10,8 @@ const NewCarPage = () => {
   const [selectedBrand, setSelectedBrand] = useState('');
   const [model, setModel] = useState('');
   const [models, setModels] = useState([]);
+
+  
 
   useEffect(() => {
     if (brand.length <= 2) {
@@ -26,7 +27,6 @@ const NewCarPage = () => {
   const getBrands = () => {
     const _searchBrand = {
       brand
-      
     };
     axios.post(`${API_URL}/getBrands`, _searchBrand)
       .then((res) => {
@@ -40,7 +40,7 @@ const NewCarPage = () => {
 
   const getModels = () => {
     const _searchBrand = {
-      brand
+      brand: selectedBrand // Use selectedBrand instead of brand
     };
     axios.post(`${API_URL}/getModelsByBrand`, _searchBrand)
       .then((res) => {
@@ -78,8 +78,36 @@ const NewCarPage = () => {
             ))}
           </div>
         </div>
-
         {selectedBrand && (
+          <div className="car-models-container">
+            <div className="search-model-container">
+              <input
+                type="text"
+                placeholder={`Enter your ${selectedBrand} model`}
+                value={model}
+                onChange={(e) => setModel(e.target.value)}
+              />
+              {models.length > 0 && (
+                <div className="model-suggestions">
+                  {models
+                    .filter((eachModel) =>
+                      eachModel.toLowerCase().includes(model.toLowerCase())
+                    )
+                    .map((filteredModel) => (
+                      <Link
+                        to={`/CarSpares/${selectedBrand}/${filteredModel}`}
+                        key={filteredModel}
+                      >
+                        <div className="model-suggestion">{filteredModel}</div>
+                      </Link>
+                    ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* {selectedBrand && (
           <div className="car-models-container">
             <div className="search-model-container">
               <input
@@ -101,21 +129,7 @@ const NewCarPage = () => {
               )}
             </div>
           </div>
-        )}
-
-          {models.length > 0 &&
-          models.map((eachModel) => (
-            <p
-              onClick={() => {
-                setBrand(eachModel);
-                setSelectedBrand(eachModel);
-              }}
-              className={eachModel === selectedBrand ? "highlighted-brand" : ""}
-            >
-              {eachModel}
-            </p>
-          ))}
-
+        )} */}
       </div>
     </div>
   );

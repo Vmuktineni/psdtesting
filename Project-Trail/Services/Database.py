@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import app, jsonify
 from numpy import insert
 from sqlalchemy import LargeBinary, create_engine
 from sqlalchemy import select
@@ -177,7 +177,7 @@ def getBrandModelCarParts(req):
     try:
         from sqlalchemy import text
         with Session(engine) as session:
-            sql_statement = text("SELECT * FROM Car_Spares where car_id  in  (select car_id  from cars WHERE brand = :brand AND model = :model)" )
+            sql_statement = text("SELECT * FROM Car_Spares where car_id  in  (select car_id  from cars WHERE brand = :brand AND model = :model)")
             query = session.query(Car_Spares).from_statement(sql_statement)
             query = query.params(brand=req['brand'], model=req['model'])
             sparesResult = query.all()
@@ -194,6 +194,7 @@ def getBrandModelCarParts(req):
     except Exception as e:
         print(e)
         return [{}]
+
     
 def getAllSparesForBikes(req):
     try:

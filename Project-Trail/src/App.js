@@ -47,6 +47,8 @@ function App() {
           <Route path="/bikeparts/:brand/:model" element={<BikeParts />} />
           <Route path ="/car-spares/:carId" element={<CarSpares/>}/>
           <Route path ="/bike-spares/:bikeId" element={<BikeSpares/>}/>
+          {/* <Route exact path="/" component={NewCarPage} /> */}
+          <Route path="/CarSpares/:brand/:model" component={CarParts} />
 
 
         </Routes>
