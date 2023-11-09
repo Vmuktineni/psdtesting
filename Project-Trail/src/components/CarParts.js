@@ -1,52 +1,51 @@
-import React from 'react';
-import '../CSS/CarParts.css'; 
+import React, { useEffect, useState } from 'react';
+import { useCart } from './CartContext';
+import '../CSS/CarParts.css';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../Constants';
+import { useSelector } from 'react-redux';
 
-const parts = [
-  {
-    id: 1,
-    name: 'Engine Oil Filter',
-    description: 'High-quality engine oil filter for optimal performance.',
-    image: 'engine_oil_filter.jpg', 
-    rating: 4.8,
-  },
-  {
-    id: 2,
-    name: 'Brake Pads',
-    description: 'Durable brake pads for smooth and safe braking.',
-    image: 'brake_pads.jpg', 
-    rating: 4.5,
-  },
-  {
-    id: 3,
-    name: 'Air Filter',
-    description: 'Efficient air filter for clean and improved airflow.',
-    image: 'air_filter.jpg', 
-    rating: 4.7,
-  },
-  {
-    id: 4,
-    name: 'Spark Plugs',
-    description: 'High-performance spark plugs for efficient combustion.',
-    image: 'spark_plugs.jpg', 
-    rating: 4.6,
-  },
-  {
-    id: 5,
-    name: 'Transmission Fluid',
-    description: 'Quality transmission fluid for smooth gear shifts.',
-    image: 'transmission_fluid.jpg', 
-    rating: 4.4,
-  },
-  {
-    id: 6,
-    name: 'Fuel Filter',
-    description: 'Reliable fuel filter for clean and efficient fuel delivery.',
-    image: 'fuel_filter.jpg', 
-    rating: 4.5,
-  },
-];
 
 function CarParts() {
+  const { brand, model } = useParams();
+  const [parts,setParts] = useState([]);
+  const user_id = useSelector(state => state?.userInfo?.user?.userId);  
+
+  useEffect(() => {
+    getBrandModelCarParts();
+  },[]);
+
+  const addToCart = (s_id) =>{
+    const _addToCart = {
+      user_id,
+      s_id
+    };
+    axios.post(`${API_URL}/addToCart`, _addToCart)
+      .then((res) =>{
+        if (res && res.data && res.data.issuccess) {
+          window.alert('added succesfully');
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+  }
+
+  const getBrandModelCarParts = () => {
+    const _searchParts = {
+      brand,
+      model
+    };
+    axios.post(`${API_URL}/getBrandModelCarParts`, _searchParts)
+      .then((res) =>{
+        if (res && res.data && res.data.length > 0) {
+          setParts(res.data);
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+  }
+  
   return (
     <div>
       <h1>Car Parts</h1>
@@ -59,8 +58,14 @@ function CarParts() {
             <div className="rating">
               Rating: {part.rating} <span role="img" aria-label="star">⭐</span>
             </div>
+            <div className="rating">
+              Price: {part.price}
+            </div>
+
             <div className="button-container">
-              <button className="add-to-cart">Add to Cart</button>
+              <button className="add-to-cart" onClick={()=> addToCart(part.s_id)}>
+                Add to Cart
+              </button>
               <button className="Buy-now">Buy Now</button>
             </div>
           </div>

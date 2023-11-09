@@ -1,66 +1,71 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useCart } from './CartContext';
 import '../CSS/BikeParts.css';
-
-const parts = [
-  {
-    id: 1,
-    name: 'Brake Discs',
-    description: 'High-quality brake discs for efficient braking.',
-    image: 'brake_discs.jpg',
-    rating: 4.7,
-  },
-  {
-    id: 2,
-    name: 'Tires',
-    description: 'Durable tires for a smooth and safe ride.',
-    image: 'tires.jpg',
-    rating: 4.5,
-  },
-  {
-    id: 3,
-    name: 'Exhaust System',
-    description: 'Performance exhaust system for better engine output.',
-    image: 'exhaust_system.jpg',
-    rating: 4.8,
-  },
-  {
-    id: 4,
-    name: 'Chain and Sprocket Kit',
-    description: 'High-quality chain and sprocket kit for smooth transmission.',
-    image: 'chain_sprocket.jpg',
-    rating: 4.6,
-  },
-  {
-    id: 5,
-    name: 'Oils and Lubricants',
-    description: 'Quality oils and lubricants for optimal performance.',
-    image: 'oils_lubricants.jpg',
-    rating: 4.4,
-  },
-  {
-    id: 6,
-    name: 'Air Filters',
-    description: 'Efficient air filters for clean and improved airflow.',
-    image: 'air_filters.jpg',
-    rating: 4.5,
-  },
-];
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { API_URL } from '../Constants';
+import { useSelector } from 'react-redux';
 
 function BikeParts() {
+  const { brand, model } = useParams();
+  const [parts, setParts] = useState([]);
+  const user_id = useSelector(state => state?.userInfo?.user?.userId);  
+
+  useEffect(() => {
+    getBrandModelBikeParts();
+  });
+
+  const addToBikeCart = (s_id) =>{
+    const _addToCart = {
+      user_id,
+      s_id
+    };
+    axios.post(`${API_URL}/addToBikeCart`, _addToCart)
+      .then((res) =>{
+        if (res && res.data && res.data.issuccess) {
+          window.alert('added succesfully');
+        }
+      }).catch((err) => {
+        console.error(err);
+      });
+  }
+
+  const getBrandModelBikeParts = () => {
+    const _searchParts = {
+      brand,
+      model
+    };
+    axios.post(`${API_URL}/getBrandModelBikeParts`, _searchParts)
+      .then((res) => {
+        if (res && res.data && res.data.length > 0) {
+          setParts(res.data);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  }
+
   return (
     <div>
       <h1>Bike Parts</h1>
-      <div className="part-boxes">
-        {parts.map((part, index) => (
-          <div key={part.id} className={`bike-part-box part-${index + 1}`}>
+      <div className="car-part-boxes">
+        {parts.slice(0, 6).map((part, index) => (
+          <div key={part.id} className={`car-part-box part-${index + 1}`}>
             <img src={part.image} alt={part.name} />
             <h2>{part.name}</h2>
             <p>{part.description}</p>
             <div className="rating">
               Rating: {part.rating} <span role="img" aria-label="star">⭐</span>
             </div>
+            <div className="rating">
+              Price: {part.price}
+            </div>
+
             <div className="button-container">
-              <button className="add-to-cart">Add to Cart</button>
+              <button className="add-to-cart" onClick={()=> addToBikeCart(part.s_id)}>
+                Add to Cart
+              </button>
               <button className="Buy-now">Buy Now</button>
             </div>
           </div>
@@ -69,4 +74,5 @@ function BikeParts() {
     </div>
   );
 }
+
 export default BikeParts;

@@ -18,10 +18,10 @@ import Carpage from './components/NewCarPage';
 import BikePage from './components/BikePage';
 import CarParts from './components/CarParts'; 
 import BikeParts from './components/Bikepart';
-import CarSpares from './components/CarSpares';
 import BikeSpares from './components/BikeSpares';
+import Cart from './components/Cart'; 
 import NewCarPage from './components/NewCarPage';
-
+import NewBikePage from './components/NewBikePage';
 
 
 function App() {
@@ -41,12 +41,12 @@ function App() {
           <Route path ="/bikes" element={<Bikes/>}/>
           <Route path ="/logout" element={<Logout/>}/>
           <Route path ="/settings" element={<Settings/>}/>
-          <Route path ="/bike-search" element={<NewCarPage/>}/>
+          <Route path ="/bike-search" element={<NewBikePage/>}/>
           <Route path ="/car-search" element={<NewCarPage/>}/> 
           <Route path="/carparts/:brand/:model" element={<CarParts />} />
           <Route path="/bikeparts/:brand/:model" element={<BikeParts />} />
-          <Route path ="/car-spares/:carId" element={<CarSpares/>}/>
           <Route path ="/bike-spares/:bikeId" element={<BikeSpares/>}/>
+          <Route path="/cart" element={<Cart />} />
 
         </Routes>
         <Footer /> 

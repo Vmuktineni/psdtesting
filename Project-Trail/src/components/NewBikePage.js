@@ -2,16 +2,14 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { API_URL } from "../Constants";
 import { Link } from "react-router-dom";
-import '../CSS/Carpage.css';
+import '../CSS/BikePage.css'; 
 
-const NewCarPage = () => {
+const NewBikePage = () => {
   const [brand, setBrand] = useState('');
   const [brands, setBrands] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
   const [model, setModel] = useState('');
   const [models, setModels] = useState([]);
-
-  
 
   useEffect(() => {
     if (brand.length <= 2) {
@@ -28,7 +26,7 @@ const NewCarPage = () => {
     const _searchBrand = {
       brand
     };
-    axios.post(`${API_URL}/getBrands`, _searchBrand)
+    axios.post(`${API_URL}/getBikeBrands`, _searchBrand) // Update the API endpoint for bike brands
       .then((res) => {
         if (res && res.data && res.data.length > 0) {
           setBrands(res.data);
@@ -40,9 +38,9 @@ const NewCarPage = () => {
 
   const getModels = () => {
     const _searchBrand = {
-      brand: selectedBrand // Use selectedBrand instead of brand
+      brand: selectedBrand
     };
-    axios.post(`${API_URL}/getModelsByBrand`, _searchBrand)
+    axios.post(`${API_URL}/getBikeModelsByBrand`, _searchBrand) // Update the API endpoint for bike models
       .then((res) => {
         if (res && res.data && res.data.length > 0) {
           setModels(res.data);
@@ -54,14 +52,13 @@ const NewCarPage = () => {
 
   return (
     <div>
-      <div className="carpage-container">
-        <h1>Car Brands</h1>
-        
+      <div className="bikepage-container">
+        <h1>Bike Brands</h1>
         <div className="search-container">
           <div className="search-input">
             <input
               type="text"
-              placeholder="Search car brands"
+              placeholder="Search bike brands"
               value={brand}
               onChange={(e) => setBrand(e.target.value)}
             />
@@ -79,7 +76,7 @@ const NewCarPage = () => {
           </div>
         </div>
         {selectedBrand && (
-          <div className="car-models-container">
+          <div className="bike-models-container">
             <div className="search-model-container">
               <input
                 type="text"
@@ -95,7 +92,7 @@ const NewCarPage = () => {
                     )
                     .map((filteredModel) => (
                       <Link
-                        to={`/CarParts/${selectedBrand}/${filteredModel}`}
+                        to={`/bikeparts/${selectedBrand}/${filteredModel}`}
                         key={filteredModel}
                       >
                         <div className="model-suggestion">{filteredModel}</div>
@@ -106,33 +103,9 @@ const NewCarPage = () => {
             </div>
           </div>
         )}
-
-        {/* {selectedBrand && (
-          <div className="car-models-container">
-            <div className="search-model-container">
-              <input
-                type="text"
-                placeholder={`Enter your ${selectedBrand} model`}
-                value={model}
-                onChange={(e) => setModel(e.target.value)}
-              />
-              {models.length > 0 && (
-                <div className="model-suggestions">
-                  {models.map((eachModel) => (
-                    <Link to={`/CarSpares/${selectedBrand}/${eachModel}`} key={eachModel}>
-                      <div className="model-suggestion">
-                        {eachModel}
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );
 }
 
-export default NewCarPage;
+export default NewBikePage;

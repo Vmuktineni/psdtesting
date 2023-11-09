@@ -1,61 +1,51 @@
-from sqlalchemy import create_engine
+from flask import jsonify
+from numpy import insert
+from sqlalchemy import LargeBinary, create_engine
+from sqlalchemy import select
+import base64
 #from sqlalchemy import filter, filter_by
 
 
-#engine = create_engine('mssql+pyodbc://@' + 'VINEETHA\MSSQL' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=ODBC Driver 17 for SQL Server')
-#engine = create_engine('mssql+pyodbc://@' + 'SREEHARI\MSSQLSERVER01' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=ODBC Driver 17 for SQL Server')
-engine = create_engine('mssql+pyodbc://@' + 'DESKTOP-8FANH7R' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=ODBC Driver 17 for SQL Server')
+#engine = create_engine('mssql+pyodbc://@' + DESKTOP-8FANH7R + '/' + BWorks + '?trusted_connection=yes&driver=ODBC+Driver+13+for+SQL+Server  driver=SQL Server Native Client 11.0')')
 
-#engine = create_engine('mssql+pyodbc://@' + 'DESKTOP-E5BITMF' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=SQL Server')
-#engine = create_engine('mssql+pyodbc://@DESKTOP-E5BITMF/Mechazone?trusted_connection=yes&driver=SQL+Server')
-#engine = create_engine('mssql+pyodbc://@' + 'HP' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=ODBC Driver 17 for SQL Server')
+engine = create_engine('mssql+pyodbc://@' + 'VINEETHA\MSSQL' + '/' + 'Mechazone' + '?trusted_connection=yes & driver=ODBC Driver 17 for SQL Server')
 
+#engine = create_engine('mssql+pyodbc://@' + 'DESKTOP-8FANH7R' + '/' + 'BWorks' + '?trusted_connection=yes&driver=SQL Server', use_setinputsizes=False)
 
-
+from datetime import datetime
+from sqlalchemy import ForeignKey,DateTime,Boolean
 from sqlalchemy import String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column
 from sqlalchemy import Integer
+from sqlalchemy.orm import relationship
 from sqlalchemy import Integer,Float
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Session
 
+
+# qualify the base with _allow_unmapped_.  Can also be
+# applied to classes directly if preferred
 class Base:
     pass
     #_allow_unmapped_ = True
 
 
 Base = declarative_base(cls=Base)
-  
 
-class bikes(Base):
-    __tablename__ = "bikes"
-
-    bike_id: int = Column(Integer, primary_key=True)
-    model: str = Column(String,nullable=False )
-    price: str = Column(Float, nullable = False)
-    year :int = Column(Integer,nullable=False )
-
-class cars(Base):
+# existing mapping proceeds, Declarative will ignore any annotations
+# which don't include ``Mapped[]``
+class Cars(Base):
     __tablename__ = "cars"
 
     car_id: int = Column(Integer, primary_key=True)
     model: str = Column(String,nullable=False )
     price: float = Column(Float, nullable = False)
     year: int = Column(Integer, nullable = False)
-    
+    brand: str = Column(String,nullable=False)
+    image: str = Column(LargeBinary,nullable=True)
 
-class Users(Base):
-    __tablename__ = "Users"
-
-    UserId: int = Column(Integer, primary_key=True)
-    Name: str = Column(String(255))
-    ContactId: str = Column(String(10), nullable=False)
-    Email: str = Column(String(255), nullable=False)
-    Address: str = Column(String(255), nullable=False)
-    ZipCode: str = Column(String(20), nullable=False)
-    UserName: str = Column(String(255), nullable=False)
-    Password: str = Column(String(255), nullable=False)
-    
 class Car_Spares(Base):
     __tablename__ = "Car_Spares"
 
@@ -64,7 +54,6 @@ class Car_Spares(Base):
     price: float = Column(Float, nullable = False)
     warranty: int = Column(Integer, nullable = True)
     c_id: int = Column(Integer, nullable = False)  
-
 
 class Bike_Spares(Base):
     __tablename__ = "Bike_Spares"
@@ -76,8 +65,76 @@ class Bike_Spares(Base):
     c_id: int = Column(Integer, nullable = False)     
    
 
+class Bikes(Base):
+    __tablename__ = "bikes"
+
+    bike_id: int = Column(Integer, primary_key=True)
+    model: str = Column(String,nullable=False )
+    price: str = Column(Float, nullable = False)
+    year :int = Column(Integer,nullable=False )
+    brand: str = Column(String,nullable=False)
+
+
+
+class Users(Base):
+    __tablename__ = "Users"
+
+    UserId: int = Column(Integer, primary_key=True)
+    Name: str = Column(String,nullable=False )
+    ContactId: int = Column(Integer, nullable = False)
+    Email: str = Column(String, nullable = False)
+    Address: str = Column(String, nullable = False)
+    ZipCode: str = Column(String,nullable = False)
+    UserName: str = Column(String, nullable = False)
+    Password: str = Column(String, nullable = False)
+
+
+class CartItems(Base):
+    __tablename__ = "CartItems"
+
+    cart_item_id: int = Column(Integer, primary_key=True)
+    user_id: int = Column(Integer, nullable=False)
+    s_id: int =  Column(Integer, nullable=False)
+
+class BikeCartItems(Base):
+    __tablename__ = "BikeCartItems"
+
+    cart_item_id: int = Column(Integer, primary_key=True)
+    user_id: int = Column(Integer, nullable=False)
+    s_id: int =  Column(Integer, nullable=False)
+
+
+def addBike_item_to_cart(req):
+    from sqlalchemy import insert
+    try:
+        stmt = insert(BikeCartItems).values(user_id=req['user_id'], s_id=req['s_id'])
+        stmt.compile()
+        with engine.connect() as conn:
+            result = conn.execute(stmt)
+            conn.commit()
+        return {"issuccess": True}
+    except Exception as e:
+        print(f"Failed to add item to cart: {str(e)}")
+        return {"issuccess": False, "message": str(e)}        
+    
+
+def addCar_item_to_cart(req):
+    from sqlalchemy import insert
+    try:
+        stmt = insert(CartItems).values(user_id=req['user_id'], s_id=req['s_id'])
+        stmt.compile()
+        with engine.connect() as conn:
+            result = conn.execute(stmt)
+            conn.commit()
+        return {"issuccess": True}
+    except Exception as e:
+        print(f"Failed to add item to cart: {str(e)}")
+        return {"issuccess": False, "message": str(e)}
+
+
 
 def register_db(req):
+
     from sqlalchemy import insert
     stmt = insert(Users).values(Name=req['Name'], ContactId=req['ContactId'],Email=req['Email'],Address=req['Address'],ZipCode=req['ZipCode'],UserName=req['UserName'],Password=req['Password'])
     compiled = stmt.compile()
@@ -85,6 +142,8 @@ def register_db(req):
         result = conn.execute(stmt)
         conn.commit()
     return {"issuccess": True} 
+
+
 
 def login_db(req):
     try:
@@ -112,60 +171,33 @@ def login_db(req):
         print(e)
         return {}        
         
-def getAllBikesFrom_db():
-    try:
-        
-        from sqlalchemy import text
-        with Session(engine) as session:
-            print("session")
-            sql_statement = text("SELECT * FROM bikes" )
-            query = session.query(bikes).from_statement(sql_statement)
-            bikesresult = query.all()
-            bikesList= []
-            
-            for bike in bikesresult:
-                bikesList.append({
-                "bike_id": bikes.bike_id,
-                "model" : bikes.model,
-                "year": bikes.year,
-                "price": bikes.price,
-                
-            })
-           
-            return bikesList
-    except Exception as e:
-        print(e)
-        return {}   
-
 def getAllCarsFrom_db():
     try:
         
         from sqlalchemy import text
         with Session(engine) as session:
-            print("session")
             sql_statement = text("SELECT * FROM cars" )
-            query = session.query(cars).from_statement(sql_statement)
+            query = session.query(Cars).from_statement(sql_statement)
         
             carsResult = query.all()
             carsList = []
             for car in carsResult:
+                image_data = car.image
+                base64_image = ""
+                if image_data:
+                    base64_image = base64.b64encode(image_data).decode('utf-8')
                 carsList.append({
                     "car_id": car.car_id,
                     "model" : car.model,
                     "year": car.year,
                     "price": car.price,
+                    "image": base64_image,
+                    "brand": car.brand
                 })
-                
-           
             return carsList
-
     except Exception as e:
         print(e)
-
-
-     
-        return{}
-
+        return [{}]
     
 def getAllSparesForCars(req):
     try:
@@ -187,8 +219,7 @@ def getAllSparesForCars(req):
             return spares
     except Exception as e:
         print(e)
-
-        return [{}]
+        return [{}]    
     
 def getAllSparesForBikes(req):
     try:
@@ -212,4 +243,135 @@ def getAllSparesForBikes(req):
         print(e)
         return [{}]
 
+    
+def getBrands(req):
+    try:
+        with Session(engine) as session:
+            query= session.query(Cars).filter(Cars.brand.like("%"+req['brand']+"%"))
+            brandsResult = query.all()
+            brands=[]
+            for brand in brandsResult:
+                brands.append(brand.brand)
+            return brands
+    except Exception as e:
+        print(e)
+        return []    
+    
+def getModelsByBrand(req):
+    try:
+        from sqlalchemy import text
+        with Session(engine) as session:
+            sql_statement = text("select * from cars where brand = :brand")
+            query = session.query(Cars).from_statement(sql_statement)
+            query = query.params(brand=req['brand'])
+            modelsResult = query.all()
+            models=[]
+            for model in modelsResult:
+                models.append(model.model)
+            return models
+    except Exception as e:
+        print(e)
+        return []
+    
 
+def getBikeBrands(req):
+    try:
+        with Session(engine) as session:
+            query= session.query(Bikes).filter(Bikes.brand.like("%"+req['brand']+"%"))
+            brandsResult = query.all()
+            brands=[]
+            for brand in brandsResult:
+                brands.append(brand.brand)
+            return brands
+    except Exception as e:
+        print(e)
+        return []  
+    
+def getBikeModelsByBrand(req):
+    try:
+        from sqlalchemy import text
+        with Session(engine) as session:
+            sql_statement = text("select * from bikes where brand = :brand")
+            query = session.query(Bikes).from_statement(sql_statement)
+            query = query.params(brand=req['brand'])
+            modelsResult = query.all()
+            models=[]
+            for model in modelsResult:
+                models.append(model.model)
+            return models
+    except Exception as e:
+        print(e)
+        return []   
+        
+
+
+    
+def getAllBikesFrom_db():
+    try:
+        
+        from sqlalchemy import text
+        with Session(engine) as session:
+            print("session")
+            sql_statement = text("SELECT * FROM bikes" )
+            query = session.query(Bikes).from_statement(sql_statement)
+            bikesresult = query.all()
+            bikesList= []
+            
+            for bike in bikesresult:
+                bikesList.append({
+                "bike_id": Bikes.bike_id,
+                "model" : Bikes.model,
+                "year": Bikes.year,
+                "price": Bikes.price,
+                
+            })
+           
+            return bikesList
+    except Exception as e:
+        print(e)
+        return {}   
+
+
+def getBrandModelCarParts(req):
+    try:
+        from sqlalchemy import text
+        with Session(engine) as session:
+            sql_statement = text("SELECT * FROM Car_Spares where car_id  in  (select car_id  from cars WHERE brand = :brand AND model = :model)")
+            query = session.query(Car_Spares).from_statement(sql_statement)
+            query = query.params(brand=req['brand'], model=req['model'])
+            sparesResult = query.all()
+            spares = []
+            for spare in sparesResult:
+                spares.append({
+                    "s_id": spare.s_id,
+                    "name": spare.name,
+                    "price": spare.price,
+                    "warranty": spare.warranty
+                })
+
+            return spares
+    except Exception as e:
+        print(e)
+        return [{}]        
+
+def getBrandModelBikeParts(req):
+    try:
+        from sqlalchemy import text
+        with Session(engine) as session:
+            sql_statement = text("SELECT * FROM Bike_Spares where bike_id  in  (select bike_id  from bikes WHERE brand = :brand AND model = :model)")
+            query = session.query(Bike_Spares).from_statement(sql_statement)
+            query = query.params(brand=req['brand'], model=req['model'])
+            sparesResult = query.all()
+            bikeSpares = []
+            for spare in sparesResult:
+                bikeSpares.append({
+                    "s_id": spare.s_id,
+                    "name": spare.name,
+                    "price": spare.price,
+                    "warranty": spare.warranty
+                })
+
+            return bikeSpares
+    except Exception as e:
+        print(e)
+        return [{}]
