@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request,jsonify,render_template
 from traitlets import This
-from Database import addBike_item_to_cart, addCar_item_to_cart, getAllBikesFrom_db,getAllSparesForBikes,getAllCarsFrom_db,getAllSparesForCars, getBikeBrands,getBikeModelsByBrand, getBrandModelBikeParts, getBrandModelCarParts, getBrands, getModelsByBrand,register_db,login_db
+from Database import addBike_item_to_cart, addCar_item_to_cart, getAllBikesFrom_db,getAllSparesForBikes,getAllCarsFrom_db,getAllSparesForCars, getBikeBrands,getBikeModelsByBrand, getBrandModelBikeParts, getBrandModelCarParts, getBrands, getModelsByBrand, prepareShoppingCart,register_db,login_db
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -101,6 +101,12 @@ def addtobikecart():
     if req['user_id'] is None or req['s_id'] is None:
         return {"issuccess": False, "message": "user_id and s_id are required."}
     res = addBike_item_to_cart(req)
+    return jsonify(res)
+
+@app.route('/prepareShoppingCart',methods = ['post'])
+def prepareshoppingcart():
+    req = request.get_json()
+    res = prepareShoppingCart(req)
     return jsonify(res)
 
 

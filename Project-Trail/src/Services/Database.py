@@ -23,6 +23,11 @@ from sqlalchemy import Integer,Float
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import Session
+from sqlalchemy import insert
+from sqlalchemy import text
+
+
+
 
 
 # qualify the base with _allow_unmapped_.  Can also be
@@ -53,7 +58,7 @@ class Car_Spares(Base):
     name: str = Column(String,nullable=False )
     price: float = Column(Float, nullable = False)
     warranty: int = Column(Integer, nullable = True)
-    c_id: int = Column(Integer, nullable = False)  
+    car_id: int = Column(Integer, nullable = False)  
 
 class Bike_Spares(Base):
     __tablename__ = "Bike_Spares"
@@ -103,6 +108,79 @@ class BikeCartItems(Base):
     user_id: int = Column(Integer, nullable=False)
     s_id: int =  Column(Integer, nullable=False)
 
+class ShoppingCart(Base):
+    __tablename__ = "shopping_cart_table"
+
+    Cart_id: int = Column(Integer,primary_key=True)
+    user_id: int = Column(Integer,nullable=False)
+    price: int = Column(Integer,nullable=False)
+    discount_percent: int = Column(Integer,nullable=False)
+    amount: int = Column(Integer,nullable=False)
+    delivery_type: str = Column(String, nullable=True)
+    status: str = Column(String, nullable=False)
+    date_created: str = Column(String,nullable=False)
+
+def prepareShoppingCart(req):
+
+    try:
+        cartItems= getCartItems(req) 
+        sparePartInfo = getSparePartAmount(cartItems)
+        price = sparePartInfo.get('totalPrice')
+        discount = 10
+        amount = price-(price*discount)/100
+        smt = insert(ShoppingCart).values(user_id=req['user_id'], price= price,discount_percent= discount,amount=amount,status='created')
+        smt.compile()
+        with engine.connect() as conn:
+            result = conn.execute(smt)
+            conn.commit()
+        shoppingCart = {
+            'amount': amount,
+            'discount': (price*discount)/100,
+            'price': price,
+            'sparesInfo': sparePartInfo.get('spareParts')
+
+        }
+        return {"issuccess": True, 'shoppingCart':shoppingCart}
+    except Exception as e:
+        print(f"Failed to prepare shopping cart: {str(e)}")
+        return {"issuccess": False, "message": str(e)} 
+    
+def getCartItems(req):
+    try:
+        with Session(engine) as session:
+            sql_statement = text("SELECT * FROM CartItems where user_id=:user_id " )
+            query = session.query(CartItems).from_statement(sql_statement)
+            query = query.params(user_id=req['user_id'])
+            cartResult = query.all()
+            cartItems = []
+            for item in cartResult:
+                cartItems.append(item.s_id)
+            return cartItems
+    except Exception as e:
+        print(e)
+        return []
+    
+def getSparePartAmount(s_ids):
+    try:
+        with Session(engine) as session:
+            query = session.query(Car_Spares).filter(Car_Spares.s_id.in_(s_ids))
+            parts = query.all()
+            price = 0
+            spareParts = []
+            for part in parts:
+                price += part.price
+                spareParts.append({
+                    "name": part.name,
+                    "price": part.price,
+                    "warranty": part.warranty
+                })
+            return {'totalPrice':price,'spareParts':spareParts}
+    except Exception as e:
+        print(e)
+        return 0
+        
+
+
 
 def addBike_item_to_cart(req):
     from sqlalchemy import insert
@@ -130,6 +208,9 @@ def addCar_item_to_cart(req):
     except Exception as e:
         print(f"Failed to add item to cart: {str(e)}")
         return {"issuccess": False, "message": str(e)}
+    
+
+
 
 
 
@@ -194,7 +275,7 @@ def getAllCarsFrom_db():
                     "image": base64_image,
                     "brand": car.brand
                 })
-            return carsList
+            return []
     except Exception as e:
         print(e)
         return [{}]
