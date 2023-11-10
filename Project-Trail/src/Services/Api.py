@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request,jsonify,render_template
 from traitlets import This
-from Database import addBike_item_to_cart, addCar_item_to_cart, getAllBikesFrom_db,getAllSparesForBikes,getAllCarsFrom_db,getAllSparesForCars, getBikeBrands,getBikeModelsByBrand, getBrandModelBikeParts, getBrandModelCarParts, getBrands, getModelsByBrand, prepareShoppingCart,register_db,login_db
+from Database import addBike_item_to_cart, addCar_item_to_cart, getAllBikesFrom_db,getAllSparesForBikes,getAllCarsFrom_db,getAllSparesForCars, getBikeBrands,getBikeModelsByBrand, getBrandModelBikeParts, getBrandModelCarParts, getBrands, getModelsByBrand, prepareShoppingCart,register_db,login_db, update_delivery_type
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -87,7 +87,7 @@ def brandmodelbikeparts():
     res = getBrandModelBikeParts(req)
     return jsonify(res)
 
-@app.route('/addToCart',methods = ['post'])
+@app.route('/addToCart',methods = ['post'])#D
 def addtocart():
     req = request.get_json()
     if req['user_id'] is None or req['s_id'] is None:
@@ -95,7 +95,7 @@ def addtocart():
     res = addCar_item_to_cart(req)
     return jsonify(res)
 
-@app.route('/addToBikeCart',methods = ['post'])
+@app.route('/addToBikeCart',methods = ['post'])#D
 def addtobikecart():
     req = request.get_json()
     if req['user_id'] is None or req['s_id'] is None:
@@ -103,10 +103,16 @@ def addtobikecart():
     res = addBike_item_to_cart(req)
     return jsonify(res)
 
-@app.route('/prepareShoppingCart',methods = ['post'])
+@app.route('/prepareShoppingCart',methods = ['post'])#V
 def prepareshoppingcart():
     req = request.get_json()
     res = prepareShoppingCart(req)
+    return jsonify(res)
+
+@app.route('/deliveryType',methods = ['post'])#V
+def deliverytype():
+    req = request.get_json()
+    res = update_delivery_type(req)
     return jsonify(res)
 
 

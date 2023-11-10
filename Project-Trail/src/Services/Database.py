@@ -1,6 +1,6 @@
 from flask import jsonify
 from numpy import insert
-from sqlalchemy import LargeBinary, create_engine
+from sqlalchemy import Enum, LargeBinary, and_, create_engine, update
 from sqlalchemy import select
 import base64
 #from sqlalchemy import filter, filter_by
@@ -94,21 +94,21 @@ class Users(Base):
     Password: str = Column(String, nullable = False)
 
 
-class CartItems(Base):
+class CartItems(Base): #D
     __tablename__ = "CartItems"
 
     cart_item_id: int = Column(Integer, primary_key=True)
     user_id: int = Column(Integer, nullable=False)
     s_id: int =  Column(Integer, nullable=False)
 
-class BikeCartItems(Base):
+class BikeCartItems(Base):#d
     __tablename__ = "BikeCartItems"
 
     cart_item_id: int = Column(Integer, primary_key=True)
     user_id: int = Column(Integer, nullable=False)
     s_id: int =  Column(Integer, nullable=False)
 
-class ShoppingCart(Base):
+class ShoppingCart(Base): #V
     __tablename__ = "shopping_cart_table"
 
     Cart_id: int = Column(Integer,primary_key=True)
@@ -116,11 +116,40 @@ class ShoppingCart(Base):
     price: int = Column(Integer,nullable=False)
     discount_percent: int = Column(Integer,nullable=False)
     amount: int = Column(Integer,nullable=False)
-    delivery_type: str = Column(String, nullable=True)
+    delivery_type_options = ['Home', 'Store']
+    delivery_type: str = Column(Enum(*delivery_type_options), nullable=False)
     status: str = Column(String, nullable=False)
     date_created: str = Column(String,nullable=False)
 
-def prepareShoppingCart(req):
+def update_delivery_type(req_data): #v
+    try:
+        cart_id = req_data.get('cart_id')
+        user_id = req_data.get('user_id')
+        delivery_type = req_data.get('delivery_type')
+
+        if cart_id is None or user_id is None or delivery_type is None:
+            return {"issuccess": False, "message": "Missing required parameters"}
+
+        if delivery_type not in ShoppingCart.delivery_type_options:
+            return {"issuccess": False, "message": "Invalid delivery_type"}
+
+        smt = update(ShoppingCart).where(and_(ShoppingCart.Cart_id == cart_id, ShoppingCart.user_id == user_id)).values(
+            delivery_type=delivery_type
+        )
+        smt.compile()
+
+        with Session(engine) as conn:
+            result = conn.execute(smt)
+            conn.commit()
+
+        return {"issuccess": True, "message": "Delivery type updated successfully"}
+
+    except Exception as e:
+        print(f"Failed to update delivery type: {str(e)}")
+        return {"issuccess": False, "message": str(e)}   
+     
+
+def prepareShoppingCart(req):#v
 
     try:
         cartItems= getCartItems(req) 
@@ -145,7 +174,8 @@ def prepareShoppingCart(req):
         print(f"Failed to prepare shopping cart: {str(e)}")
         return {"issuccess": False, "message": str(e)} 
     
-def getCartItems(req):
+    
+def getCartItems(req):#V
     try:
         with Session(engine) as session:
             sql_statement = text("SELECT * FROM CartItems where user_id=:user_id " )
@@ -160,7 +190,7 @@ def getCartItems(req):
         print(e)
         return []
     
-def getSparePartAmount(s_ids):
+def getSparePartAmount(s_ids):#V
     try:
         with Session(engine) as session:
             query = session.query(Car_Spares).filter(Car_Spares.s_id.in_(s_ids))
@@ -182,7 +212,7 @@ def getSparePartAmount(s_ids):
 
 
 
-def addBike_item_to_cart(req):
+def addBike_item_to_cart(req):#D
     from sqlalchemy import insert
     try:
         stmt = insert(BikeCartItems).values(user_id=req['user_id'], s_id=req['s_id'])
@@ -196,7 +226,7 @@ def addBike_item_to_cart(req):
         return {"issuccess": False, "message": str(e)}        
     
 
-def addCar_item_to_cart(req):
+def addCar_item_to_cart(req):#D
     from sqlalchemy import insert
     try:
         stmt = insert(CartItems).values(user_id=req['user_id'], s_id=req['s_id'])
@@ -209,9 +239,6 @@ def addCar_item_to_cart(req):
         print(f"Failed to add item to cart: {str(e)}")
         return {"issuccess": False, "message": str(e)}
     
-
-
-
 
 
 def register_db(req):
